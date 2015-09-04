@@ -1,0 +1,45 @@
+<html ng-app='Store'>
+<head>
+<title>Angular App Demo</title>
+</head>
+<body ng-controller='StoreController as store'>
+<table border=1>
+	<tr ng-repeat="product in store.products | orderBy:'price'">
+		<td>{{product.name}}</td>
+		<td>{{product.description}}</td>
+		<td>
+			{{product.price | currency}}
+			<div ng-hide='product.isSoldOut'>
+				<button>Add to Cart</button>
+			</div>		
+		</td>
+		<td>
+			<table border=1>
+				<tr ng-repeat='review in product.reviews'>
+					<td>
+						{{review.title}}<br/>
+						{{review.description}}<br/>
+						By {{review.author}}
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td>
+			<form name='reviewForm' novalidate="novalidate" ng-controller='ReviewController as reviewCtrl' ng-submit='reviewForm.$valid && reviewCtrl.addReview(product)'>
+				<fieldset>
+					<legend>Post your review</legend>
+					<h5>Enter Title</h5><input type=text name='title' ng-model="reviewCtrl.review.title" required>
+					<h5>Enter Description</h5><textarea name='description' ng-model="reviewCtrl.review.description"  required></textarea>
+					<h5>Enter Author</h5><input type=email name='author' ng-model="reviewCtrl.review.author"  required><br/>
+					<input type=submit value='Add Review'>
+					review status : {{reviewForm.$valid}}					
+					<a href="#" onclick='doGreeting()'>ShowMe</a>
+				</fieldset>
+			</form>
+		</td>
+	</tr>
+</table> 
+<script type="text/javascript" src="angular.min.js"></script>
+<script type="text/javascript" src="app.js"></script>
+</body>
+</html>
