@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+    <p th:text="'Attribute Message -> ${message} value ->'+${message} " />
+    <table border="1">
+    	<tr>
+    		<td>First Name</td>
+    		<td>Last Name</td>
+    		<td>City</td>
+    	</tr>
+    	<tr th:each="user : ${userList}">
+    		<td th:text="${user.firstName}">Example First Name</td>
+    		<td th:text="${user.lastName}">Example Last Name</td>
+    		<td th:text="${user.city}">Example City</td>
+    	</tr>
+    	<tr>
+    		<td colspan="3" align="center">
+    			<input type="submit" value="Update User" /> 
+    		</td>
+    	</tr>
+    </table>
+</body>
+</html>
