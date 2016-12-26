@@ -7,7 +7,11 @@ public class StreamShowcase {
 	
 	public static void main(String ...args) {
 		Stream<String> lang = Stream.of("A","B","C","D");
-		lang.filter(x -> !x.equalsIgnoreCase("B")).collect(Collectors.toList()).forEach(System.out::println);
+		lang.filter(x -> !x.equalsIgnoreCase("B")).collect(Collectors.toList()).forEach(System.out::println);		
+	}
+	
+	public static <T> T method1(T obj) {
+		return obj;
 	}
 
 }
