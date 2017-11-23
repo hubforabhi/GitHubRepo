@@ -1,17 +1,21 @@
 package com.abhi;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-@EnableWebMvc
+@SpringBootApplication
 @EnableTransactionManagement
-@Configuration
-@ComponentScan(basePackages = "com.abhi.controller")
 public class ApplicationContext {
-	private static final Logger logger = LogManager.getLogger(ApplicationContext.class);
+	private static final Logger logger = LoggerFactory.getLogger(ApplicationContext.class);
 
+	public static void main(String[] args) {
+		ConfigurableApplicationContext ctx = SpringApplication.run(ApplicationContext.class, args);
+		Environment env = ctx.getEnvironment();
+		logger.debug("Started Spring-JPA Application on "+ env.getProperty("server.port"));
+	}
 }

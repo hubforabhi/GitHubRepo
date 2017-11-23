@@ -2,23 +2,51 @@
 <configuration>
 
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-	    <layout class="ch.qos.logback.classic.PatternLayout">
-		<Pattern>
-			%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n
-		</Pattern>
-	    </layout>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>
+				%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
+			</Pattern>
+		</layout>
 	</appender>
-
-	<logger name="org.springframework" level="debug" additivity="false">
-		<appender-ref ref="STDOUT" />
-	</logger>
-
+	
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>d:/logs/eureka-server.log</file>
+		
+		<!-- ch.qos.logback.core.rolling.TimeBasedRollingPolicy -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy"> 
+			<fileNamePattern>
+				d:/logs/archive/eureka-server-%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<maxFileSize>10MB</maxFileSize>
+			<maxHistory>60</maxHistory>
+   			<totalSizeCap>1GB</totalSizeCap>
+		</rollingPolicy>
+		
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d %-5level [%thread] %logger{0}: %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+		<queueSize>500</queueSize>
+		<discardingThreshold>0</discardingThreshold>
+		<appender-ref ref="STDOUT"/>
+	</appender>
+	
 	<logger name="com.abhi" level="debug" additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<root level="error">
+	<logger name="org.springframework.jdbc" level="INFO" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+	
+	<logger name="org.springframework.web" level="INFO" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<root level="WARN">
 		<appender-ref ref="STDOUT" />
 	</root>
-
+	
 </configuration>
