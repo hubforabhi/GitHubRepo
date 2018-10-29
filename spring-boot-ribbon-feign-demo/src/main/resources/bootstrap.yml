@@ -1,0 +1,7 @@
+eureka:
+  client: 
+    serviceUrl:
+      defaultZone: http://localhost:8100/eureka/
+  instance:
+    health-check-url: http://localhost:8095/ribbon/ping
+    appname: spring-boot-ribbon-feign-demo
