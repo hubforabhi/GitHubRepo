@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.cloud.netflix.ribbon.RibbonClient;
@@ -18,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
+@EnableDiscoveryClient
 @RestController
 @RequestMapping("/ribbon")
-@SuppressWarnings("rawtypes")
 @RibbonClients(value={
 @RibbonClient(name="Order-Service", configuration = OrderServiceConfiguration.class),
 @RibbonClient(name="Product-Service", configuration = ProductServiceConfiguration.class)})
@@ -41,20 +42,20 @@ public class SpringBootRibbonFeignDemoApplication {
     
 	@RequestMapping(value = "/order")
 	public ResponseEntity<String> order() {		
-		ServiceInstance instance = client.choose("Order-Service");
+		ServiceInstance instance = client.choose("order-service");
 		logger.debug("SpringBootRibbonFeignDemoApplication.order status : " +
 		instance !=null? instance.getHost(): "INSTANCE NOT FOUND");
-		ResponseEntity<?> entity = restTemplate.getForEntity("http://Order-Service/order/ping", ResponseEntity.class);
+		ResponseEntity<?> entity = restTemplate.getForEntity("http://order-service/order/ping", ResponseEntity.class);
 		logger.debug("SpringBootRibbonFeignDemoApplication.order status : " +entity.getStatusCodeValue());
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/product")
 	public ResponseEntity<String> product() {
-		ServiceInstance instance = client.choose("Product-Service");
+		ServiceInstance instance = client.choose("product-service");
 		logger.debug("SpringBootRibbonFeignDemoApplication.product status : " +
 		instance !=null? instance.getHost(): "INSTANCE NOT FOUND");
-		ResponseEntity<?> entity = restTemplate.getForEntity("http://Product-Service/product/ping", ResponseEntity.class);
+		ResponseEntity<?> entity = restTemplate.getForEntity("http://product-service/product/ping", ResponseEntity.class);
 		logger.debug("SpringBootRibbonFeignDemoApplication.product status : " +entity.getStatusCodeValue());
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
