@@ -39,11 +39,21 @@
 		    <groupId>org.jolokia</groupId>
 		    <artifactId>jolokia-core</artifactId>
 		 </dependency>
+		<!-- Dependency for Eureka Client -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-eureka</artifactId>
+		</dependency>		 
 		 <!-- Dependency for Ribbon for Client Side Load Balancing -->
 		 <dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-ribbon</artifactId>
 		</dependency>
+		<!-- Dependency for Feign -->
+		<dependency>
+          <groupId>org.springframework.cloud</groupId>
+          <artifactId>spring-cloud-starter-feign</artifactId>
+    </dependency>
 	</dependencies>
 	
 	<!-- Needed Dependency for Ribbon for Client Side Load Balancing -->
@@ -52,7 +62,7 @@
 	      <dependency>
 	        <groupId>org.springframework.cloud</groupId>
 	        <artifactId>spring-cloud-dependencies</artifactId>
-	        <version>Camden.SR5</version>
+	        <version>Dalston.SR4</version>
 	        <type>pom</type>
 	        <scope>import</scope>
 	      </dependency>
