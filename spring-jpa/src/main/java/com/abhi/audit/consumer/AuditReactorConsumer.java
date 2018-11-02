@@ -1,17 +1,19 @@
 package com.abhi.audit.consumer;
 
-import org.slf4j.Logger;
+import org.springframework.stereotype.Component;
+/*import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.abhi.audit.service.AuditService;
 
 import reactor.bus.Event;
-import reactor.fn.Consumer;
+import reactor.fn.Consumer;*/
 
 @Component
-public class AuditReactorConsumer implements Consumer<Event<String>> {
+public class AuditReactorConsumer {
+	/*implements Consumer<Event<String>> {
+}
 	private static Logger logger = LoggerFactory.getLogger(AuditReactorConsumer.class);
 
 	@Autowired
@@ -22,4 +24,4 @@ public class AuditReactorConsumer implements Consumer<Event<String>> {
 		logger.debug("AuditReactorConsumer "+e.getData());
 		auditService.insertAuditRecord();
 	}
-}
+*/}

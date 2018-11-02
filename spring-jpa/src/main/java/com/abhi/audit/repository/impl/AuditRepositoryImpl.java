@@ -1,7 +1,7 @@
 package com.abhi.audit.repository.impl;
 
-import java.sql.Date;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+import java.time.Instant;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class AuditRepositoryImpl implements AuditRepository {
 	@Transactional
 	public boolean insertAuditRecord() {
 		logger.debug("AuditRepositoryImpl.insertAuditRecord");
-		int rowCount = template.update("insert into cdisi_audit values(?,?,?)", new Object[]{1,"Sample Audit", new Date(new java.util.Date().getTime())});
+		int rowCount = template.update("insert into app_audit values(?,?,?)", new Object[]{1,"Sample Audit",  Timestamp.from(Instant.now())});
 		return true;
 	}
 	
