@@ -8,23 +8,23 @@ import org.springframework.context.annotation.Configuration;
 
 import com.abhi.audit.consumer.AuditReactorConsumer;
 
-import reactor.bus.EventBus;
-import reactor.spring.context.config.EnableReactor;
-import static reactor.bus.selector.Selectors.$;
+//import reactor.bus.EventBus;
+//import reactor.spring.context.config.EnableReactor;
+//import static reactor.bus.selector.Selectors.$;
 
-@Configuration
-@EnableReactor
+//@Configuration
+//@EnableReactor
 public class ReactorConfiguration implements CommandLineRunner {
 	private static Logger logger = LoggerFactory.getLogger(ReactorConfiguration.class);
 	
-	@Autowired
-	private EventBus bus;
+	//@Autowired
+	//private EventBus bus;
 	
-	@Autowired
-	private AuditReactorConsumer consumer;
+	//@Autowired
+	//private AuditReactorConsumer consumer;
 	
 	@Override
 	public void run(String... arg0) throws Exception {
-		bus.on($("doAudit"), consumer);
+		//bus.on($("doAudit"), consumer);
 	}
 }
