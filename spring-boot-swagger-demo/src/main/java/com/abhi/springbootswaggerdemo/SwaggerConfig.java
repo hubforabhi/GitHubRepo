@@ -13,13 +13,14 @@ import static springfox.documentation.builders.PathSelectors.regex;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
+	
 	@Bean
-	public Docket productApi() {
+	public Docket api() {
 		return new Docket(DocumentationType.SWAGGER_2)
 				.select()
-				.apis(RequestHandlerSelectors.any())              
+				//.apis(RequestHandlerSelectors.any())              
 		        //.paths(PathSelectors.any())     
-				//.apis(RequestHandlerSelectors.basePackage("com.abhi.controller"))
+				.apis(RequestHandlerSelectors.basePackage("com.abhi.employee.controller"))
 				.paths(regex("/employee.*"))
 				.build();
 	}
