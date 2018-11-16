@@ -31,28 +31,37 @@
 			<groupId>de.codecentric</groupId>
 			<artifactId>spring-boot-admin-starter-client</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		
+		<!--  Swagger Dependencies -->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
-			<version>2.6.1</version>
-			<scope>compile</scope>
+			<version>2.9.2</version>
 		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.6.1</version>
-			<scope>compile</scope>
+			<version>2.9.2</version>
 		</dependency>
+
+		<!--  Hazelcast Dependencies -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast-spring</artifactId>
+        </dependency>
 	</dependencies>
 
 	<dependencyManagement>
