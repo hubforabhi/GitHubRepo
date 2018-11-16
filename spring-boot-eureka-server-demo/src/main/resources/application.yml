@@ -1,0 +1,19 @@
+# High Availablity Configuration
+
+eureka:
+  #instance:
+   # hostname: peer1,peer2
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    region: region-1
+    serviceUrl:
+      kolkata: http://localhost:8050/eureka/
+      mumbai: http://localhost:8051/eureka/
+    availability-zones:
+      region-1: kolkata
+      region-2: mumbai
+   
+  server:
+    eviction-interval-timer-in-ms: 10000
+    enableSelfPreservation: false

@@ -1,0 +1,7 @@
+server:
+  port: 8051
+
+eureka:
+  instance:
+    hostname: localhost
+    metadataMap.zone: mumbai
