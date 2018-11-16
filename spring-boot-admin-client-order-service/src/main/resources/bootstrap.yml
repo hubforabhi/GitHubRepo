@@ -1,0 +1,10 @@
+eureka:
+  client:
+    healthcheck:
+      enabled: false
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8100/eureka}
+    registryFetchIntervalSeconds: 10
+  instance:
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 2
