@@ -42,7 +42,7 @@
 		<!-- Dependency for Eureka Client -->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-eureka</artifactId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>		 
 		 <!-- Dependency for Ribbon for Client Side Load Balancing -->
 		 <dependency>

@@ -1,4 +1,4 @@
-package com.abhi.ribbon.feign;
+package com.abhi.ribbon.demo;
 
 import org.springframework.context.annotation.Configuration;
 
