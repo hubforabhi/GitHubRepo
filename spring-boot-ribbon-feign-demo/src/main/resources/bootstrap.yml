@@ -1,10 +1,14 @@
 eureka:
   client: 
     serviceUrl:
-      defaultZone: ${EUREKA_URI:http://localhost:8050/eureka}
+      defaultZone: ${EUREKA_URI:http://localhost:8051/eureka}
     registryFetchIntervalSeconds: 10      
   instance:
     health-check-url: http://{server.address}:{server.port}/ribbon/ping
     appname: spring-boot-ribbon-feign-demo
     leaseRenewalIntervalInSeconds: 1
     leaseExpirationDurationInSeconds: 2    
+
+spring:
+  application:
+    name: spring-boot-ribbon-feign-demo
