@@ -1,19 +1,42 @@
 # High Availablity Configuration
-
+---
+spring:
+  profiles: kolkata
 eureka:
-  #instance:
-   # hostname: peer1,peer2
+  instance:
+    hostname: kolkata
+    #appname: eureka-cluster-kolkata
   client:
+    #serviceUrl:
+      #defaultZone: http://localhost:8051/eureka
     register-with-eureka: false
-    fetch-registry: false
-    region: region-1
+    #fetch-registry: true
+    #healthcheck:
+      #enabled: true
+server:
+  port: 8050
+
+
+---
+spring:
+  profiles: mumbai
+eureka:
+  instance:
+    hostname: mumbai
+    #appname: eureka-cluster-mumbai
+  client:
+    #serviceUrl:
+      #defaultZone: http://localhost:8050/eureka
+    register-with-eureka: false
+    #fetch-registry: true
+    #healthcheck:
+      #enabled: true    
+server:
+  port: 8051
+
+
+---
+eureka:
+  client:
     serviceUrl:
-      kolkata: http://localhost:8050/eureka/
-      mumbai: http://localhost:8051/eureka/
-    availability-zones:
-      region-1: kolkata
-      region-2: mumbai
-   
-  server:
-    eviction-interval-timer-in-ms: 10000
-    enableSelfPreservation: false
+      defaultZone: http://localhost:8050/eureka/,http://localhost:8051/eureka/
