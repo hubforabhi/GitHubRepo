@@ -1,0 +1,17 @@
+eureka:
+  client: 
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8051/eureka,http://localhost:8050/eureka}
+    registryFetchIntervalSeconds: 10      
+  instance:
+    health-check-url: http://{server.address}:{server.port}/admin/ping
+    appname: spring-boot-zuul-demo
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 2
+    metadata-map:
+      versions: v1    
+
+spring:
+  application:
+    name: spring-boot-zuul-demo
+    
