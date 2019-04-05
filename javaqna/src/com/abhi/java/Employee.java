@@ -1,13 +1,36 @@
 package com.abhi.java;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
-public class Employee {
+public class Employee implements Serializable {
 	private String name;
+	private Address[] address = new Address[2];
+	private int age;
+
+	public Employee() {
+		System.out.println("Employee Default Constructor ");
+	}
 	
-	public Employee(String name) {
+	public Employee(String name, int age) {
 		this.name = name;
+		this.age = age;
+	}
+
+	public Employee(String name, Address address) {
+		System.out.println("Employee Param Constructor "+ name);
+		this.name = name;
+		this.address[0] = address;
+		this.address[1] = new Address("","","Hatira",700157);
+	}
+	
+	public int getAge() {
+		return this.age;
 	}
 
 	@Override
@@ -34,13 +57,42 @@ public class Employee {
 	public String getName() {
 		return name;
 	}
-
-	public void setName(String name) {
-		this.name = name;
+	
+	public Address getAddress() {
+		return address[0];
+	}
+	
+	public Address getAnotherAddress() {
+		return address[1];
 	}
 	
 	public static void main(String[] args) {
-		String eName = "Abhi Bhowmick";
+		Employee emp1 = new Employee("abhi"+"1", new Address("","","Saltlake",700091));
+		try(FileOutputStream fos =new FileOutputStream("employee.ser")) {
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(emp1);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		try(FileInputStream fis = new FileInputStream("employee.ser")) {
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			Employee employee = (Employee) ois.readObject();
+			System.out.println(employee.getName());
+			System.out.println(employee.getAddress().getCity());
+			System.out.println(employee.getAnotherAddress().getCity());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		/*String eName = "Abhi Bhowmick";
 		Employee emp1 = new Employee(eName+"1");
 		Employee emp2 = new Employee(eName+"2");
 		
@@ -51,6 +103,6 @@ public class Employee {
 		System.out.println("Second Key Placed");
 		
 		System.out.println(empName.get(emp1));
-		System.out.println(empName.get(emp2));
+		System.out.println(empName.get(emp2));*/
 	}
 }
