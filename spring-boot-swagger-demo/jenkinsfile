@@ -1,0 +1,12 @@
+node {
+    stage('Build') {
+    	ws('D:/git/GitHubRepo/spring-boot-swagger-demo/') {
+			bat 'mvn clean install'
+		}
+    }
+    stage('Run') {
+    	ws('D:/git/GitHubRepo/spring-boot-swagger-demo/target') {
+			bat 'java -jar -Dserver.port=8010 spring-boot-swagger-demo-0.0.1-SNAPSHOT.jar '
+		}
+    }
+}
