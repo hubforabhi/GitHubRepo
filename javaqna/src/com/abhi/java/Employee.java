@@ -8,7 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
-public class Employee implements Serializable {
+public class Employee implements Serializable , Comparable<Employee> {// Needs to impletement Comparable to use this as key in TreeMap
 	private String name;
 	private Address[] address = new Address[2];
 	private int age;
@@ -35,8 +35,9 @@ public class Employee implements Serializable {
 
 	@Override
 	public int hashCode() {
-		System.out.println("-- hashCode --");
-		return 12345;//name.hashCode();
+		//System.out.println("-- hashCode --");
+		//return 12345;
+		return name.hashCode();
 	}
 	
 	@Override
@@ -104,5 +105,21 @@ public class Employee implements Serializable {
 		
 		System.out.println(empName.get(emp1));
 		System.out.println(empName.get(emp2));*/
+	}
+
+	@Override
+	public int compareTo(Employee varEmp) {
+		if(this.getName().equals(varEmp.getName()) && this.getAge() == varEmp.getAge()) {
+			return 0;
+		} else {
+			if(!this.getName().equals(varEmp.getName()) && this.getAge() > varEmp.getAge())
+				return 1;
+			else if(!this.getName().equals(varEmp.getName()) && this.getAge() < varEmp.getAge())
+				return -1;
+			else if(this.getAge() == varEmp.getAge()) {
+				return this.getName().compareTo(varEmp.getName());
+			}
+		}
+		return 0;
 	}
 }
