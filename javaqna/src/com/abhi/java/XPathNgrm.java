@@ -6,7 +6,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -27,6 +30,7 @@ import org.xml.sax.SAXException;
 public class XPathNgrm {
 	private static final String EPIC_NAME = "Steel Vessel Rules";
 	private static final String COMMA = ",";
+	private static final String DOT = ".";
 	private static final String COMMON_ROOT_FOLDER = "D:\\XSD\\automate\\xml\\";
 	
 	private DocumentBuilderFactory dbFactory;
@@ -49,39 +53,42 @@ public class XPathNgrm {
 		return rootTitleNode.getTextContent();
 	};
 
-	BiConsumer<String, Element> secondLevelSectionDivVisitor = (prefix, sectionElement) -> {		
-		NodeList secondLevelSectionDivNodeList = sectionElement.getElementsByTagName("sectiondiv");
+	BiFunction<String[], Element, List<String>> secondLevelSectionDivVisitor = (prefix, secondLevelSectionDivElement) -> {		
+		NodeList secondLevelSectionDivNodeList = secondLevelSectionDivElement.getElementsByTagName("sectiondiv");
+		List<String> secondLevelSectionDivList = new ArrayList<>();
 		for(int i=0;i<secondLevelSectionDivNodeList.getLength();i++) {
 			Element secondLevelSectionDiv = (Element) secondLevelSectionDivNodeList.item(i);
-			if(secondLevelSectionDiv.getElementsByTagName("ptitle").getLength()>0)
-				System.out.println(prefix+COMMA+secondLevelSectionDiv.getElementsByTagName("ptitle").item(0).getTextContent());
-		}				
+			if(secondLevelSectionDiv.getElementsByTagName("ptitle").getLength()>0) {
+				String secondLevelSectionDivName = secondLevelSectionDiv.getElementsByTagName("ptitle").item(0).getTextContent();
+				secondLevelSectionDivList.add(secondLevelSectionDivName);
+				System.out.println(prefix[0]+COMMA+prefix[1]+DOT+i+COMMA+secondLevelSectionDivName);
+			}			
+		}	
+		return secondLevelSectionDivList;
 	};
 
-	BiConsumer<String, Element> sectionDivVisitor = (prefix, sectionElement) -> {
-		String sectionDivExpression = "/concept/conbody/section/sectiondiv";
-		try {
-			NodeList sectionDivNodeList = (NodeList) xPath.compile(sectionDivExpression).evaluate(sectionElement, XPathConstants.NODESET);
-			for(int i=0;i<sectionDivNodeList.getLength();i++) {
-				Element sectionDivElement = (Element) sectionDivNodeList.item(i);
-				String sectionDivNumberLabel = sectionDivElement.getAttribute("numberLabel");
-				//System.out.println("Section Division Label :: "+sectionDivElement.getAttribute("numberLabel"));					
-				String sectionDivTitle = sectionDivElement.getElementsByTagName("ptitle").item(0).getTextContent().trim();
-				if(sectionElement.getElementsByTagName("sectiondiv").getLength()>0) {
-					secondLevelSectionDivVisitor.accept(prefix+COMMA+sectionDivNumberLabel+COMMA+sectionDivTitle, sectionDivElement);	
-				} else {
-					System.out.println(prefix+COMMA+sectionDivTitle);
-				}
+	BiConsumer<String[], Element> sectionDivVisitor = (prefix, sectionDivElement) -> {		
+		NodeList sectionDivNodeList =  sectionDivElement.getElementsByTagName("sectiondiv");
+		List<String> secondLevelSectionDivList = new ArrayList<>();
+		for(int i=0;i<sectionDivNodeList.getLength();i++) {
+			Element sectionDiv = (Element) sectionDivNodeList.item(i);
+			String sectionDivNumberLabel = sectionDiv.getAttribute("numberLabel");
+			if(sectionDiv.getElementsByTagName("ptitle").item(0) != null) {
+				String sectionDivTitle = sectionDiv.getElementsByTagName("ptitle").item(0).getTextContent().trim();
+				if(!secondLevelSectionDivList.contains(sectionDivTitle)) {
+					System.out.println(prefix[0]+COMMA+prefix[1]+DOT+sectionDivNumberLabel+COMMA+sectionDivTitle);
+					if(sectionDiv.getElementsByTagName("sectiondiv").getLength()>0) {
+						secondLevelSectionDivList = secondLevelSectionDivVisitor.apply(new String[] {prefix[0]+COMMA+prefix[1]+COMMA+sectionDivNumberLabel+COMMA+sectionDivTitle,prefix[1]+DOT+sectionDivNumberLabel}, sectionDiv);
+					}				
+				}				
 			}
-		} catch (XPathExpressionException e) {
-			e.printStackTrace();
 		}
 	};		
 	
-	BiConsumer<String, Document> sectionVisitor = (prefix, doc) -> {
+	BiConsumer<String[], Document> sectionVisitor = (prefix, doc) -> {
 		String sectionDivExpression = "/concept/conbody/section";
 		String title = topicTitleConsumer.apply(doc).trim();
-		System.out.println(prefix+COMMA+title);
+		System.out.println(prefix[1]+title);
 		try {
 			NodeList sectionNodeList = (NodeList) xPath.compile(sectionDivExpression).evaluate(doc, XPathConstants.NODESET);
 			for (int i = 0; i < sectionNodeList.getLength(); i++) {
@@ -91,9 +98,9 @@ public class XPathNgrm {
 					String sectionNumberLabel = sectionElement.getAttribute("numberLabel");
 					NodeList sectionTitleNodeList = sectionElement.getElementsByTagName("title");
 					String sectionTitle = ((Element)sectionTitleNodeList.item(0)).getTextContent();
-					System.out.println(prefix+COMMA+title+COMMA+sectionNumberLabel+COMMA+sectionTitle);
+					System.out.println(title+COMMA+sectionNumberLabel+COMMA+sectionTitle);
 					if(sectionElement.getElementsByTagName("sectiondiv").getLength()>0) {
-						sectionDivVisitor.accept(prefix+COMMA+title+COMMA+sectionNumberLabel+COMMA+sectionTitle, sectionElement);	
+						sectionDivVisitor.accept(new String[] {title+COMMA+sectionNumberLabel+COMMA+sectionTitle,sectionNumberLabel}, sectionElement);	
 					}						
 				}
 			}	
@@ -172,19 +179,37 @@ public class XPathNgrm {
 			Document doc = dBuilder.parse(destPath.toFile());
 			doc.getDocumentElement().normalize();			
 			//System.out.print(EPIC_NAME+COMMA+"Part"+COMMA+partValue+COMMA+"Chapter"+COMMA+chapterValue+COMMA+typeOfSection+COMMA+sectionValue);
-			sectionVisitor.accept(EPIC_NAME+COMMA+"Part"+COMMA+partValue+COMMA+"Chapter"+COMMA+chapterValue+COMMA+typeOfSection+COMMA+sectionValue, doc);
+			sectionVisitor.accept(new String[] {EPIC_NAME+COMMA+"Part"+COMMA+partValue+COMMA+"Chapter"+COMMA+chapterValue+COMMA+typeOfSection,sectionValue}, doc);
 			//fw.write(System.lineSeparator());
 			Files.delete(destPath);
 		} catch (IOException | SAXException e) {
 			e.printStackTrace();
 		}
 	};
+	
+	public static void runUnitTestCase(String fileNameForUnitTest) throws ParserConfigurationException, IOException {
+		// Below is unit test code
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Path destPath = Paths.get(COMMON_ROOT_FOLDER,fileNameForUnitTest);
+		Document doc;
+		try {
+			doc = dBuilder.parse(destPath.toFile());
+			doc.getDocumentElement().normalize();		
+			new XPathNgrm().sectionVisitor.accept(new String[] {"",""},doc);
+		} catch (SAXException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public static void main(String[] args) throws IOException, ParserConfigurationException {
 		long startMilliSeconds = System.currentTimeMillis();
 		Path path = Paths.get("D:\\XSD\\automate\\xml\\NGRM CHapters");		
 		FileWriter fw = new FileWriter("D:\\XSD\\automate\\Publication.csv");		
-		Files.walk(path).filter(Files::isRegularFile).forEach(new XPathNgrm().fileWalkerConsumer);		
+		Files.walk(path).filter(Files::isRegularFile).forEach(new XPathNgrm().fileWalkerConsumer);
+		
+		//runUnitTestCase("SECTION 4 Rules for Classification.xml");
+		
 		fw.close();
 		System.out.println("Total Time "+(System.currentTimeMillis() - startMilliSeconds));		
 	}
