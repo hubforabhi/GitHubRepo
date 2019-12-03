@@ -28,10 +28,10 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class XPathNgrm {
-	private static final String EPIC_NAME = "Steel Vessel Rules";
-	private static final String COMMA = ",";
-	private static final String DOT = ".";
-	private static final String COMMON_ROOT_FOLDER = "D:\\XSD\\automate\\xml\\";
+	private String EPIC_NAME = "Marine Vessel Rules";
+	private String COMMA = ",";
+	private String DOT = ".";
+	private String COMMON_ROOT_FOLDER = "D:\\XSD\\automate\\xml\\";
 	
 	private DocumentBuilderFactory dbFactory;
 	private DocumentBuilder dBuilder;
@@ -41,6 +41,7 @@ public class XPathNgrm {
 	public XPathNgrm() throws ParserConfigurationException {
 		dbFactory = DocumentBuilderFactory.newInstance();
 		dBuilder = dbFactory.newDocumentBuilder();
+		EPIC_NAME = "Marine Vessel Rules";
 		fw = null;
 	}
 	
@@ -51,6 +52,10 @@ public class XPathNgrm {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void setEpicName(String epicName) {
+		this.EPIC_NAME = epicName;
 	}
 	
 	public void close() {
@@ -229,12 +234,12 @@ public class XPathNgrm {
 
 	public static void main(String[] args) throws IOException, ParserConfigurationException {
 		long startMilliSeconds = System.currentTimeMillis();
-		//Path path = Paths.get("D:\\XSD\\automate\\xml\\NGRM CHapters");		
-		//XPathNgrm ngrmTopicFileVisitor = new XPathNgrm("D:\\XSD\\automate\\Publication.csv");		
-		//Files.walk(path).filter(Files::isRegularFile).forEach(ngrmTopicFileVisitor.fileWalkerConsumer);
-		//ngrmTopicFileVisitor.close();
+		Path path = Paths.get("D:\\XSD\\automate\\xml\\NGRM CHapters");		
+		XPathNgrm ngrmTopicFileVisitor = new XPathNgrm("D:\\XSD\\automate\\Publication.csv");		
+		Files.walk(path).filter(Files::isRegularFile).forEach(ngrmTopicFileVisitor.fileWalkerConsumer);
+		ngrmTopicFileVisitor.close();
 		
-		runUnitTestCase();		
+		//runUnitTestCase();		
 		
 		System.out.println("Total Time "+(System.currentTimeMillis() - startMilliSeconds));		
 	}
