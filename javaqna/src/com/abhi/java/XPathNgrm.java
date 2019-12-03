@@ -131,7 +131,8 @@ public class XPathNgrm {
 					Element sectionElement = (Element) nNode;
 					String sectionNumberLabel = sectionElement.getAttribute("numberLabel");
 					NodeList sectionTitleNodeList = sectionElement.getElementsByTagName("title");
-					String sectionTitle = ((Element)sectionTitleNodeList.item(0)).getTextContent().trim();					
+					String sectionTitle = ((Element)sectionTitleNodeList.item(0)).getTextContent().trim();
+					if(sectionTitle.contains("\n")) sectionTitle = sectionTitle.replaceAll("\n","");
 					loggingConsumer.accept(prefix[0]+COMMA+prefix[1]+COMMA+title+COMMA+sectionNumberLabel+COMMA+sectionTitle);
 					if(sectionElement.getElementsByTagName("sectiondiv").getLength()>0) {
 						sectionDivVisitor.accept(new String[] {prefix[0]+COMMA+prefix[1]+COMMA+title+COMMA+sectionNumberLabel+COMMA+sectionTitle,sectionNumberLabel}, sectionElement);	
