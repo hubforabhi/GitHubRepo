@@ -84,7 +84,7 @@ public class XPathNgrm {
 		} catch (XPathExpressionException e) {
 			e.printStackTrace();
 		}
-		return rootTitleNode.getTextContent();
+		return rootTitleNode.getTextContent().contains("\n") ? rootTitleNode.getTextContent().replaceAll("\n","") : rootTitleNode.getTextContent();
 	};
 
 	BiFunction<String[], Element, List<String>> secondLevelSectionDivVisitor = (prefix, secondLevelSectionDivElement) -> {		
@@ -93,7 +93,7 @@ public class XPathNgrm {
 		for(int i=0;i<secondLevelSectionDivNodeList.getLength();i++) {
 			Element secondLevelSectionDiv = (Element) secondLevelSectionDivNodeList.item(i);
 			if(secondLevelSectionDiv.getElementsByTagName("ptitle").getLength()>0) {
-				String secondLevelSectionDivName = secondLevelSectionDiv.getElementsByTagName("ptitle").item(0).getTextContent();
+				String secondLevelSectionDivName = secondLevelSectionDiv.getElementsByTagName("ptitle").item(0).getTextContent().trim();
 				secondLevelSectionDivList.add(secondLevelSectionDivName);
 				loggingConsumer.accept(prefix[0]+COMMA+prefix[1]+DOT+i+COMMA+secondLevelSectionDivName);
 			}			
@@ -121,7 +121,7 @@ public class XPathNgrm {
 	
 	BiConsumer<String[], Document> sectionVisitor = (prefix, doc) -> {
 		String sectionDivExpression = "/concept/conbody/section";
-		String title = topicTitleConsumer.apply(doc).trim();
+		String title = topicTitleConsumer.apply(doc).trim();		
 		loggingConsumer.accept(prefix[0]+COMMA+prefix[1]+COMMA+title);
 		try {
 			NodeList sectionNodeList = (NodeList) xPath.compile(sectionDivExpression).evaluate(doc, XPathConstants.NODESET);
@@ -131,7 +131,7 @@ public class XPathNgrm {
 					Element sectionElement = (Element) nNode;
 					String sectionNumberLabel = sectionElement.getAttribute("numberLabel");
 					NodeList sectionTitleNodeList = sectionElement.getElementsByTagName("title");
-					String sectionTitle = ((Element)sectionTitleNodeList.item(0)).getTextContent();
+					String sectionTitle = ((Element)sectionTitleNodeList.item(0)).getTextContent().trim();					
 					loggingConsumer.accept(prefix[0]+COMMA+prefix[1]+COMMA+title+COMMA+sectionNumberLabel+COMMA+sectionTitle);
 					if(sectionElement.getElementsByTagName("sectiondiv").getLength()>0) {
 						sectionDivVisitor.accept(new String[] {prefix[0]+COMMA+prefix[1]+COMMA+title+COMMA+sectionNumberLabel+COMMA+sectionTitle,sectionNumberLabel}, sectionElement);	
@@ -220,14 +220,15 @@ public class XPathNgrm {
 	
 	public static void runUnitTestCase() throws ParserConfigurationException, IOException {
 		Path path = Paths.get("D:\\XSD\\automate\\xml\\NGRM Test Chapters");		
-		XPathNgrm ngrmTopicFileVisitor = new XPathNgrm("D:\\XSD\\automate\\Publication.csv");
+		//XPathNgrm ngrmTopicFileVisitor = new XPathNgrm("D:\\XSD\\automate\\Publication.csv");
+		XPathNgrm ngrmTopicFileVisitor = new XPathNgrm();
 		Files.walk(path).filter(Files::isRegularFile).forEach(ngrmTopicFileVisitor.fileWalkerConsumer);
 		ngrmTopicFileVisitor.close();
 	}
 
 	public static void main(String[] args) throws IOException, ParserConfigurationException {
 		long startMilliSeconds = System.currentTimeMillis();
-		Path path = Paths.get("D:\\XSD\\automate\\xml\\NGRM CHapters");		
+		//Path path = Paths.get("D:\\XSD\\automate\\xml\\NGRM CHapters");		
 		//XPathNgrm ngrmTopicFileVisitor = new XPathNgrm("D:\\XSD\\automate\\Publication.csv");		
 		//Files.walk(path).filter(Files::isRegularFile).forEach(ngrmTopicFileVisitor.fileWalkerConsumer);
 		//ngrmTopicFileVisitor.close();
