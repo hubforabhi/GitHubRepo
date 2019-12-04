@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication(exclude= {org.redisson.spring.starter.RedissonAutoConfiguration.class, RedisAutoConfiguration.class})
-@ComponentScan(basePackages="com.abhi.redis.service")
+@ComponentScan(basePackages="com.abhi.redis.service,com.abhi.redis.service")
 public class SpringBootRedisDemoApplication {	
 	
 	//@Bean
