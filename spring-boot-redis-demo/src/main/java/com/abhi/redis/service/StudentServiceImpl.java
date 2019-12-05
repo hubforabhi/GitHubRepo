@@ -18,7 +18,7 @@ public class StudentServiceImpl implements StudentService {
 	private JdbcTemplate jdbcTemplate;
 	
 	public List<Student> findAll() {
-		return jdbcTemplate.query("SELECT * FROM STUDENT", new RowMapper<Student>() {
+		return jdbcTemplate.query("SELECT * FROM STUDENTS", new RowMapper<Student>() {
 		@Override
 			public Student mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Student student = new Student();
@@ -30,7 +30,7 @@ public class StudentServiceImpl implements StudentService {
 	}
 	
 	public Optional<Student> findById(long id) {
-		Student student = jdbcTemplate.queryForObject("SELECT * FROM STUDENT WHERE ID=?", new Object[] {id} , new RowMapper<Student>() {
+		Student student = jdbcTemplate.queryForObject("SELECT * FROM STUDENTS WHERE ID=?", new Object[] {id} , new RowMapper<Student>() {
 		@Override
 			public Student mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Student student = new Student();

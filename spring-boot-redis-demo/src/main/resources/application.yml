@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url : jdbc:postgresql://127.0.0.1:5432/postgres?currentSchema=postgres
+    url : jdbc:postgresql://127.0.0.1:5432/postgres?currentSchema=public
     name:  postgres
     password : postgres
     
