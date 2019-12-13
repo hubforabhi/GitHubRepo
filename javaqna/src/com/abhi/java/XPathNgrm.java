@@ -1,5 +1,6 @@
 package com.abhi.java;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,6 +17,13 @@ import java.util.function.Function;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
@@ -51,6 +59,7 @@ public class XPathNgrm {
 		this();
 		try {
 			fw = new FileWriter(outputFile);
+			fw.write("Epic,Part,Part Title,Chapter,Chapter Title,Section,Section Title,1 Tier Directory,Sub Section,Sub Section Title,General Sub Section,General Sub Section Title,Summary Section,Summary Title,Requirement,Revision,Attachment");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -94,14 +103,16 @@ public class XPathNgrm {
 		return rootTitleNode.getTextContent().contains("\n") ? rootTitleNode.getTextContent().replaceAll("\n","") : rootTitleNode.getTextContent();
 	};
 	
-	BiConsumer<String[], Element> paragraphVisitor = (prefix, secondLevelSectionDivElement) -> {		
+	Function<Element, String> paragraphVisitor = (secondLevelSectionDivElement) -> {		
 		NodeList secondLevelSectionDivParagraphNodeList = secondLevelSectionDivElement.getElementsByTagName("p");
 		StringBuffer buffer = new StringBuffer();
 		for(int i=0;i<secondLevelSectionDivParagraphNodeList.getLength();i++) {
 			Element secondLevelSectionDivParagraphNode = (Element) secondLevelSectionDivParagraphNodeList.item(i);
 			buffer.append(secondLevelSectionDivParagraphNode.getTextContent());			
-		}			
-		loggingConsumer.accept(prefix[0]+COMMA+buffer);
+		}
+		String bufferStr = buffer.toString();
+		if(bufferStr.contains("\n")) bufferStr = bufferStr.replaceAll("\n","");
+		return bufferStr;
 	};
 
 	BiFunction<String[], Element, List<String>> secondLevelSectionDivVisitor = (prefix, secondLevelSectionDivElement) -> {		
@@ -112,8 +123,8 @@ public class XPathNgrm {
 			if(secondLevelSectionDiv.getElementsByTagName("ptitle").getLength()>0) {
 				String secondLevelSectionDivName = secondLevelSectionDiv.getElementsByTagName("ptitle").item(0).getTextContent().trim();
 				secondLevelSectionDivList.add(secondLevelSectionDivName);
-				loggingConsumer.accept(prefix[0]+DOT+(i+1)+COMMA+prefix[2]+SLASH+secondLevelSectionDivName);
-				paragraphVisitor.accept(new String[] {prefix[0]+DOT+(i+1)+COMMA+prefix[2]+SLASH+secondLevelSectionDivName}, secondLevelSectionDiv);
+				loggingConsumer.accept(prefix[0]+DOT+(i+1)+COMMA+prefix[2]+SLASH+secondLevelSectionDivName+COMMA+
+				paragraphVisitor.apply(secondLevelSectionDiv));
 			}			
 		}	
 		return secondLevelSectionDivList;
@@ -128,10 +139,12 @@ public class XPathNgrm {
 			if(sectionDiv.getElementsByTagName("ptitle").item(0) != null) {
 				String sectionDivTitle = sectionDiv.getElementsByTagName("ptitle").item(0).getTextContent().trim();
 				if(!secondLevelSectionDivList.contains(sectionDivTitle)) {
-					loggingConsumer.accept(prefix[0]+COMMA+prefix[1]+DOT+sectionDivNumberLabel+COMMA+sectionDivTitle+COMMA+prefix[2]+DOT+sectionDivNumberLabel+COMMA+prefix[3]+SLASH+sectionDivTitle);
+					loggingConsumer.accept(prefix[0]+COMMA+prefix[1]+DOT+sectionDivNumberLabel+COMMA+sectionDivTitle+COMMA+prefix[2]+DOT+sectionDivNumberLabel+COMMA+prefix[3]+SLASH+sectionDivTitle+COMMA+
+					paragraphVisitor.apply(sectionDiv));
 					if(sectionDiv.getElementsByTagName("sectiondiv").getLength()>0) {
 						secondLevelSectionDivList = secondLevelSectionDivVisitor.apply(new String[] {prefix[0]+COMMA+prefix[1]+DOT+sectionDivNumberLabel+COMMA+sectionDivTitle+COMMA+prefix[2]+DOT+sectionDivNumberLabel,prefix[1]+DOT+sectionDivNumberLabel,prefix[3]+SLASH+sectionDivTitle}, sectionDiv);
-					}				
+					}
+					
 				}				
 			}
 		}
@@ -247,20 +260,34 @@ public class XPathNgrm {
 	
 	public static void runUnitTestCase() throws ParserConfigurationException, IOException {
 		Path path = Paths.get("D:\\XSD\\automate\\xml\\NGRM Test Chapters");		
-		XPathNgrm ngrmTopicFileVisitor = new XPathNgrm("D:\\XSD\\automate\\Publication.csv");
-		//XPathNgrm ngrmTopicFileVisitor = new XPathNgrm();
+		//XPathNgrm ngrmTopicFileVisitor = new XPathNgrm("D:\\XSD\\automate\\Publication.csv");
+		XPathNgrm ngrmTopicFileVisitor = new XPathNgrm();
 		Files.walk(path).filter(Files::isRegularFile).forEach(ngrmTopicFileVisitor.fileWalkerConsumer);
 		ngrmTopicFileVisitor.close();
 	}
 
-	public static void main(String[] args) throws IOException, ParserConfigurationException {
+	public static void main(String[] args) throws IOException, ParserConfigurationException, TransformerException, SAXException {
 		long startMilliSeconds = System.currentTimeMillis();
-		//Path path = Paths.get("D:\\XSD\\automate\\xml\\NGRM CHapters");		
-		//XPathNgrm ngrmTopicFileVisitor = new XPathNgrm("D:\\XSD\\automate\\Publication.csv");		
-		//Files.walk(path).filter(Files::isRegularFile).forEach(ngrmTopicFileVisitor.fileWalkerConsumer);
-		//ngrmTopicFileVisitor.close();
+		Path path = Paths.get("D:\\XSD\\automate\\xml\\NGRM CHapters");		
+		XPathNgrm ngrmTopicFileVisitor = new XPathNgrm("D:\\XSD\\automate\\Publication.csv");	
+		Files.walk(path).filter(Files::isRegularFile).forEach(ngrmTopicFileVisitor.fileWalkerConsumer);
+		ngrmTopicFileVisitor.close();
 		
-		runUnitTestCase();		
+		//runUnitTestCase();
+/*		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		File xml = new File("D:\\XSD\\automate\\xml\\Section 4 Ship Piping Systems and Tanks.xml");
+	    File xsl = new File("D:\\XSD\\automate\\division-numbering-templates.xsl");
+	    
+	    DocumentBuilder builder = factory.newDocumentBuilder();
+	    Document document = builder.parse(xml);
+	    
+		TransformerFactory tFactory = TransformerFactory.newInstance();
+		StreamSource stylesource = new StreamSource(xsl);
+		Transformer transformer = tFactory.newTransformer(stylesource);
+		
+		DOMSource source = new DOMSource(document);
+	    StreamResult result = new StreamResult(System.out);
+	    transformer.transform(source, result);*/
 		
 		System.out.println("Total Time "+(System.currentTimeMillis() - startMilliSeconds));		
 	}
