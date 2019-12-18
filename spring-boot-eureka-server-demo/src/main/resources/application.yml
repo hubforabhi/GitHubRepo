@@ -1,5 +1,6 @@
 # High Availablity Configuration
 ---
+# Run with Java Vm Arguments -Dspring.profiles.active=kolkata
 spring:
   profiles: kolkata
 eureka:
@@ -8,9 +9,9 @@ eureka:
     #appname: eureka-cluster-kolkata
   client:
     #serviceUrl:
-      #defaultZone: http://localhost:8051/eureka
+      #defaultZone: http://mumbai:8051/eureka
     register-with-eureka: false
-    #fetch-registry: true
+    fetch-registry: true
     #healthcheck:
       #enabled: true
 server:
@@ -18,6 +19,7 @@ server:
 
 
 ---
+# Run with Java Vm Arguments -Dspring.profiles.active=kolkata
 spring:
   profiles: mumbai
 eureka:
@@ -26,9 +28,9 @@ eureka:
     #appname: eureka-cluster-mumbai
   client:
     #serviceUrl:
-      #defaultZone: http://localhost:8050/eureka
+      #defaultZone: http://kolkata:8050/eureka
     register-with-eureka: false
-    #fetch-registry: true
+    fetch-registry: true
     #healthcheck:
       #enabled: true    
 server:
