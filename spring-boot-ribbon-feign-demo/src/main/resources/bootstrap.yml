@@ -7,7 +7,9 @@ eureka:
     health-check-url: http://{server.address}:{server.port}/ribbon/ping
     appname: spring-boot-ribbon-feign-demo
     leaseRenewalIntervalInSeconds: 1
-    leaseExpirationDurationInSeconds: 2    
+    leaseExpirationDurationInSeconds: 2
+    metadata-map:
+      versions: v1    
 
 spring:
   application:

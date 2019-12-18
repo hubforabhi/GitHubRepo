@@ -1,5 +1,6 @@
 package com.abhi.product.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -30,6 +31,21 @@ public class SpringBootAdminClientProductServiceApplication {
 	public ResponseEntity<String> ping() {
 		logger.debug("SpringBootAdminClientProductServiceApplication.ping");
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/find")
+	public ResponseEntity<String> find() {
+		logger.debug("SpringBootAdminClientProductServiceApplication.find");
+		String response = "/find";
+		return new ResponseEntity<String>(response, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/findAll")
+	public ResponseEntity<List<String>> findAll() {
+		logger.debug("SpringBootAdminClientProductServiceApplication.findAll");
+		List<String> respList = new ArrayList<>();
+		respList.add("/findAll");
+		return new ResponseEntity<List<String>>(respList, HttpStatus.OK);
 	}
 	
     @RequestMapping("/service-instances/{applicationName}")
