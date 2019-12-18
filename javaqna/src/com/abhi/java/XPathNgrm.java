@@ -60,6 +60,7 @@ public class XPathNgrm {
 		try {
 			fw = new FileWriter(outputFile);
 			fw.write("Epic,Part,Part Title,Chapter,Chapter Title,Section,Section Title,1 Tier Directory,Sub Section,Sub Section Title,General Sub Section,General Sub Section Title,Summary Section,Summary Title,Requirement,Revision,Attachment");
+			fw.write(System.lineSeparator());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -260,20 +261,20 @@ public class XPathNgrm {
 	
 	public static void runUnitTestCase() throws ParserConfigurationException, IOException {
 		Path path = Paths.get("D:\\XSD\\automate\\xml\\NGRM Test Chapters");		
-		//XPathNgrm ngrmTopicFileVisitor = new XPathNgrm("D:\\XSD\\automate\\Publication.csv");
-		XPathNgrm ngrmTopicFileVisitor = new XPathNgrm();
+		XPathNgrm ngrmTopicFileVisitor = new XPathNgrm("D:\\XSD\\automate\\Publication.csv");
+		//XPathNgrm ngrmTopicFileVisitor = new XPathNgrm();
 		Files.walk(path).filter(Files::isRegularFile).forEach(ngrmTopicFileVisitor.fileWalkerConsumer);
 		ngrmTopicFileVisitor.close();
 	}
 
 	public static void main(String[] args) throws IOException, ParserConfigurationException, TransformerException, SAXException {
 		long startMilliSeconds = System.currentTimeMillis();
-		Path path = Paths.get("D:\\XSD\\automate\\xml\\NGRM CHapters");		
-		XPathNgrm ngrmTopicFileVisitor = new XPathNgrm("D:\\XSD\\automate\\Publication.csv");	
-		Files.walk(path).filter(Files::isRegularFile).forEach(ngrmTopicFileVisitor.fileWalkerConsumer);
-		ngrmTopicFileVisitor.close();
+		//Path path = Paths.get("D:\\XSD\\automate\\xml\\NGRM CHapters");		
+		//XPathNgrm ngrmTopicFileVisitor = new XPathNgrm("D:\\XSD\\automate\\Publication.csv");	
+		//Files.walk(path).filter(Files::isRegularFile).forEach(ngrmTopicFileVisitor.fileWalkerConsumer);
+		//ngrmTopicFileVisitor.close();
 		
-		//runUnitTestCase();
+		runUnitTestCase();
 /*		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		File xml = new File("D:\\XSD\\automate\\xml\\Section 4 Ship Piping Systems and Tanks.xml");
 	    File xsl = new File("D:\\XSD\\automate\\division-numbering-templates.xsl");
