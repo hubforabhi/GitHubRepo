@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>logs/test.log</file>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>/logs/test.%d{yyyy-MM-dd-HH-mm}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
 
-	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>
+				%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
+			</Pattern>
+		</layout>
+	</appender>
+
+	<appender name="ASYNC"
+		class="ch.qos.logback.classic.AsyncAppender">
+		<queueSize>500</queueSize>
+		<discardingThreshold>0</discardingThreshold>
+		<appender-ref ref="FILE" />
+	</appender>
+
+	<appender name="STDOUT"
+		class="ch.qos.logback.core.ConsoleAppender">
 		<layout class="ch.qos.logback.classic.PatternLayout">
 			<Pattern>
 				%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
@@ -13,8 +37,9 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<root level="info">
+	<root level="INFO">
 		<appender-ref ref="STDOUT" />
+		<appender-ref ref="ASYNC" />
 	</root>
 
 </configuration>
