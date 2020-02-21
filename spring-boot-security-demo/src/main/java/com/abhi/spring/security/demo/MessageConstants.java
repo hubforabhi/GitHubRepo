@@ -11,5 +11,5 @@ public enum MessageConstants {
 	
 	public String getMessage() {
 		return this.message;
-	}
+	}	
 }

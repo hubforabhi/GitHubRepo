@@ -1,9 +1,23 @@
 package com.abhi.spring.security.demo.domain.view;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+
 public class UserView {
+	@NotNull
+	@NotBlank	
 	private String id;
+	@NotNull(message="{UserView.fName.NotNull}")
+	@Length(min=3, max=12, message="{UserView.fName.length}")
 	private String fName;
+	@NotNull(message="{UserView.lName.NotNull}")
+	@Length(min=1, max=12, message="{UserView.fName.length}")	
 	private String lName;
+	
+	public UserView() {
+	}
 	
 	public UserView(String id) {
 		this.id = id;
