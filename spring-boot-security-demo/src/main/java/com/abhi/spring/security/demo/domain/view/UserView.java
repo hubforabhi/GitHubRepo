@@ -13,7 +13,7 @@ public class UserView {
 	@Length(min=3, max=12, message="{UserView.fName.length}")
 	private String fName;
 	@NotNull(message="{UserView.lName.NotNull}")
-	@Length(min=1, max=12, message="{UserView.fName.length}")	
+	@Length(min=1, max=12, message="{UserView.lName.length}")	
 	private String lName;
 	
 	public UserView() {
