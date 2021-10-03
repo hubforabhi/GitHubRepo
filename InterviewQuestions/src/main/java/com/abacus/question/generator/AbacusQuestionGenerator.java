@@ -32,30 +32,37 @@ public class AbacusQuestionGenerator {
 	private static final String TABLE_END = "</TABLE>";
 
 	private static final int ANSWER_COUNT = 4;
-	private static final int OPERAND_1_LIMIT = 90;
-	private static final int OPERAND_2_LIMIT = 9;
+	private static final int OPERAND_1_LIMIT = 99;
+	private static final int OPERAND_2_LIMIT = 99;
+	private static final int ANSWER_LIMIT = OPERAND_1_LIMIT + OPERAND_2_LIMIT;
 
-	private static final String[] STYLES = new String[] { "<STYLE>", "table {" + "width : 100%;" + "}",
-			"th {" + "text-align : center;" + "border : 1px SOLID BLACK;" + "padding : 10px;" + "}",
-			"td {" + "text-align : center;" + "border : 1px SOLID BLACK;" + "padding : 10px;" + "}",
-			"hr.rounded {" + "border-top: 8px solid #000000;" + "border-radius: 5px;" + "}", "</STYLE>" };
+	private static final String[] STYLES = new String[] {
+			"<STYLE>", 
+			"table {width : 100%;}",
+			"th {text-align: center; border: 1px SOLID BLACK; padding: 10px;}",
+			"td {text-align: center; border: 1px SOLID BLACK; padding: 10px;}",
+			"hr.rounded {border-top: 8px solid #000000; border-radius: 5px;}", 
+			"</STYLE>" };
 
 	public static List<QuestionHolder> generateQuestions(int totalNoOfQuestions) {
 		Random random = new Random();
 		List<QuestionHolder> questionList = new LinkedList<>();
 		for (int i = 0; i < totalNoOfQuestions; i++) {
 			int operand1 = random.nextInt(OPERAND_1_LIMIT);
-			while(operand1<10) {
-				operand1 = random.nextInt(OPERAND_1_LIMIT);
-			}
-			int operand2 = random.nextInt(OPERAND_2_LIMIT);
 			boolean isAddition = random.nextBoolean();
+			int operand2 = 0;
 			int result = operand1 - operand2;
 			if (isAddition) {
+				operand2 = random.nextInt(OPERAND_2_LIMIT);
 				result = operand1 + operand2;
+			} else {
+				operand2 = random.nextInt(OPERAND_2_LIMIT);
+				while(operand2>operand1) {
+					operand2 = random.nextInt(OPERAND_2_LIMIT);
+				}
+				result = operand1 - operand2;
 			}
-			// System.out.println((i+1)+". "+operand1+(isAddition? " + " : " - ")+operand2+"
-			// = "+result);
+			// System.out.println((i+1)+". "+operand1+(isAddition? " + " : " - ")+operand2+" = "+result);
 
 			QuestionHolder holder = new QuestionHolder();
 			holder.setOperand1(operand1);
@@ -67,7 +74,7 @@ public class AbacusQuestionGenerator {
 				if (j == correctAnswerIndex) {
 					answers[j] = result;
 				} else {
-					answers[j] = random.nextInt(OPERAND_1_LIMIT);
+					answers[j] = random.nextInt(ANSWER_LIMIT);
 				}
 			}
 			holder.setAnswer(answers);
@@ -187,8 +194,7 @@ public class AbacusQuestionGenerator {
 	public static void main(String... args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
-				| UnsupportedLookAndFeelException e) {
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		}
 		JFrame rootFrame = new JFrame();
